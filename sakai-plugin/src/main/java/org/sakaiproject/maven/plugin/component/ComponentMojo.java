@@ -24,7 +24,9 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProjectHelper;
+import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.ManifestException;
 import org.codehaus.plexus.archiver.war.WarArchiver;
@@ -33,61 +35,47 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Build a war/webapp.
+ * Build a sakai component
  *
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @goal component
- * @phase package
- * @requiresDependencyResolution runtime
- * @threadSafe
  */
+@Mojo(name = "component", defaultPhase = LifecyclePhase.PACKAGE, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
 public class ComponentMojo
     extends AbstractComponentMojo
 {
     /**
      * The directory for the generated WAR.
-     *
-     * @parameter expression="${project.build.directory}"
-     * @required
      */
+    @Parameter(defaultValue="${project.build.directory}", required = true)
     private String outputDirectory;
 
     /**
      * The name of the generated WAR.
-     *
-     * @parameter expression="${project.build.finalName}"
-     * @required
      */
+    @Parameter(defaultValue="${project.build.finalName}", required = true)
     private String warName;
 
     /**
      * Classifier to add to the artifact generated. If given, the artifact will be an attachment instead.
-     *
-     * @parameter
      */
+    @Parameter
     private String classifier;
 
     /**
      * The Jar archiver.
-     *
-     * @parameter expression="${component.org.codehaus.plexus.archiver.Archiver#war}"
-     * @required
      */
+    @Component(role = Archiver.class, hint = "war")
     private WarArchiver warArchiver;
 
-
-    /**
-     * @component
-     */
+    @Component
     private MavenProjectHelper projectHelper;
 
     /**
      * Whether this is the main artifact being built. Set to <code>false</code> if you don't want to install or
      * deploy it to the local repository instead of the default one in an execution.
-     *
-     * @parameter expression="${primaryArtifact}" default-value="true"
      */
+    @Parameter(property="primaryArtifact", defaultValue = "true")
     private boolean primaryArtifact;
 
     // ----------------------------------------------------------------------

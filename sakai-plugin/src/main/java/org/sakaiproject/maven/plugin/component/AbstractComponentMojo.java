@@ -49,35 +49,27 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
 import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
-import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.InterpolationFilterReader;
-import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.*;
 
 public abstract class AbstractComponentMojo extends AbstractMojo {
 	/**
 	 * The maven project.
-	 * 
-	 * @parameter expression="${project}"
-	 * @required
-	 * @readonly
 	 */
+	@Parameter(defaultValue = "${project}", required = true, readonly = true)
 	protected MavenProject project;
 
 	/**
 	 * The directory containing generated classes.
-	 * 
-	 * @parameter expression="${project.build.outputDirectory}"
-	 * @required
-	 * @readonly
 	 */
+	@Parameter(defaultValue = "${project.build.outputDirectory}", required = true, readonly = true)
 	private File classesDirectory;
 
 	/**
@@ -86,99 +78,77 @@ public abstract class AbstractComponentMojo extends AbstractMojo {
 	 * be archived into a jar file and the classes directory will then be
 	 * excluded from the webapp.
 	 * 
-	 * @parameter expression="${archiveClasses}" default-value="false"
 	 */
+	@Parameter(property = "archiveClasses", defaultValue = "false")
 	private boolean archiveClasses;
 
 	/**
 	 * The Jar archiver needed for archiving classes directory into jar file
 	 * under WEB-INF/lib.
-	 * 
-	 * @parameter expression="${component.org.codehaus.plexus.archiver.Archiver#jar}"
-	 * @required
 	 */
+	@Component(role = org.codehaus.plexus.archiver.Archiver.class, hint = "jar")
 	private JarArchiver jarArchiver;
 
 	/**
 	 * The directory where the webapp is built.
-	 * 
-	 * @parameter expression="${project.build.directory}/${project.build.finalName}"
-	 * @required
 	 */
+	@Parameter(defaultValue = "${project.build.directory}/${project.build.finalName}", required = true)
 	private File webappDirectory;
 
 	/**
 	 * Single directory for extra files to include in the WAR.
-	 * 
-	 * @parameter expression="${basedir}/src/main/webapp"
-	 * @required
 	 */
+	@Parameter(defaultValue = "${basedir}/src/main/webapp", required = true)
 	private File warSourceDirectory;
 
 	/**
 	 * The list of webResources we want to transfer.
-	 * 
-	 * @parameter
 	 */
+	@Parameter
 	private Resource[] webResources;
 
 	/**
 	 * Filters (property files) to include during the interpolation of the
 	 * pom.xml.
-	 * 
-	 * @parameter expression="${project.build.filters}"
 	 */
+	@Parameter(defaultValue="${project.build.filters}")
 	private List filters;
 
 	/**
 	 * The path to the web.xml file to use.
-	 * 
-	 * @parameter expression="${maven.war.webxml}"
 	 */
+	@Parameter(property="maven.war.webxml")
 	private File webXml;
 
 	/**
 	 * The path to the context.xml file to use.
-	 * 
-	 * @parameter expression="${maven.war.containerConfigXML}"
 	 */
+	@Parameter(property="maven.war.containerConfigXML")
 	private File containerConfigXML;
 
 	/**
 	 * Directory to unpack dependent WARs into if needed
-	 * 
-	 * @parameter expression="${project.build.directory}/war/work"
-	 * @required
 	 */
+	@Parameter(defaultValue="${project.build.directory}/war/work", required = true)
 	private File workDirectory;
 	
-    /** 
-     * @component
-     */
+	@Component
     protected ArtifactFactory artifactFactory;
-    /**
-     * @component
-     */
+	@Component
     protected ArtifactResolver artifactResolver;
 
-    /**
-     * @parameter expression="${localRepository}
-     */
+	@Parameter(defaultValue="${localRepository}")
     protected ArtifactRepository artifactRepository;
 
-    /**
-     * @parameter expression="${project.remoteArtifactRepositories}"
-     */
+	@Parameter(defaultValue="${project.remoteArtifactRepositories}")
     protected List remoteRepositories;
 
 
 
 	/**
 	 * To look up Archiver/UnArchiver implementations
-	 * 
-	 * @parameter expression="${component.org.codehaus.plexus.archiver.manager.ArchiverManager}"
-	 * @required
 	 */
+	@Component(role = org.codehaus.plexus.archiver.manager.ArchiverManager.class)
 	protected ArchiverManager archiverManager;
 
 	private static final String WEB_INF = "WEB-INF";
@@ -190,38 +160,33 @@ public abstract class AbstractComponentMojo extends AbstractMojo {
 	/**
 	 * The comma separated list of tokens to include in the WAR. Default is
 	 * '**'.
-	 * 
-	 * @parameter alias="includes"
 	 */
+	@Parameter(alias="includes")
 	private String warSourceIncludes = "**";
 
 	/**
 	 * The comma separated list of tokens to exclude from the WAR.
-	 * 
-	 * @parameter alias="excludes"
 	 */
+	@Parameter(alias="excludes")
 	private String warSourceExcludes;
 
 	/**
 	 * The comma separated list of tokens to include when doing a war overlay.
 	 * Default is '**'
-	 * 
-	 * @parameter
 	 */
+	@Parameter
 	private String dependentWarIncludes = "**";
 
 	/**
 	 * The comma separated list of tokens to exclude when doing a war overlay.
-	 * 
-	 * @parameter
 	 */
+	@Parameter
 	private String dependentWarExcludes;
 
 	/**
 	 * The maven archive configuration to use.
-	 * 
-	 * @parameter
 	 */
+	@Parameter
 	protected MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
 
 	private static final String[] EMPTY_STRING_ARRAY = {};

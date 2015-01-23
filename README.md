@@ -1,6 +1,16 @@
 # Sakai Maven Plugin
 
-This is the Sakai Maven plugin that deploys a copy of Sakai into a copy of Tomcat.
+So this plugin has 2 functions:
+
+- sakai-component packaging. This is Sakai's own packaging type that gets deployed into the component folder
+- the deploy/deploy-exploded goal that deploys artifacts from the local maven repository into a copy of tomcat.
+
+## Testing Plugin
+
+The Sakai project normaly binds to a released version of the plugin. To quickly test new versions you
+can tell maven to use a newer versions of the plugin on the command line with:
+
+    mvn org.sakaiproject.maven.plugins:sakai:1.4.4-SNAPSHOT:deploy-exploded
 
 ## Releasing
 

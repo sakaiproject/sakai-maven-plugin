@@ -31,47 +31,41 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.AbstractArtifactResolutionException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
- * Generate the exploded webapp
- * 
- * @goal deploy
- * @requiresDependencyResolution runtime
- * @threadSafe
+ * Deploy artifacts to a copy of Tomcat
  */
+@Mojo(name = "deploy", requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
 public class ComponentDeployMojo extends AbstractComponentMojo {
 	
 	/**
 	 * The directory where the webapp is built.
-	 * 
-	 * @parameter expression="${maven.tomcat.home}/components/${project.build.finalName}"
-	 * @required
 	 */
+	@Parameter(defaultValue = "${maven.tomcat.home}/components/${project.build.finalName}", required = true)
 	private File deployDirectory;
 
 	/**
 	 * A map to define the destination where items are unpacked.
-	 * 
-	 * @parameter expression="${sakai.app.server}"
 	 */
+	@Parameter(defaultValue = "${sakai.app.server}")
 	private String appServer = null;
 	
 	/**
 	 * The ID of the artifact to use when deploying.
-	 * 
-	 * @parameter expression="${project.artifactId}"
-	 * @required
 	 */
+	@Parameter(defaultValue = "${project.artifactId}", required = true)
 	private String deployId = null;
 
 	/**
 	 * Should we cleanup old versions when an artifact is deployed containing a version.
-	 * 
-	 * @parameter expression="${sakai.cleanup}"
 	 */
+	@Parameter(defaultValue = "${sakai.cleanup}")
 	private boolean cleanup = false;
 
 	private Properties locationMap;
@@ -80,9 +74,8 @@ public class ComponentDeployMojo extends AbstractComponentMojo {
 	
 	/**
 	 * Skip deployment
-	 *
-	 * @parameter property="skip"
 	 */
+	@Parameter(property = "skip")
 	private boolean skip = false;
 
 	static {
@@ -95,6 +88,8 @@ public class ComponentDeployMojo extends AbstractComponentMojo {
 		defaultLocationMap.setProperty("configuration", "/");
 		defaultLocationMap.setProperty("endorsed", "endorsed/");
 	}
+
+	private boolean explodeWars = false;
 
 	public File getDeployDirectory() {
 		return deployDirectory;
@@ -138,6 +133,14 @@ public class ComponentDeployMojo extends AbstractComponentMojo {
 
 	public void setSkip(boolean skip) {
 		this.skip = skip;
+	}
+
+	public boolean isExplodeWars() {
+		return explodeWars;
+	}
+
+	public void setExplodeWars(boolean explodeWars) {
+		this.explodeWars = explodeWars;
 	}
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
@@ -447,7 +450,7 @@ for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
 
 	private void deployProjectArtifact(File destination, boolean withVersion,
 			boolean deleteStub) throws MojoFailureException, IOException,
-			AbstractArtifactResolutionException {
+			AbstractArtifactResolutionException, NoSuchArchiverException, MojoExecutionException {
 		Artifact artifact = project.getArtifact();
 		String fileName = null;
 		String stubName = null;
@@ -488,17 +491,25 @@ for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
 							+ ", target was " + destinationFile);
 			throw new MojoFailureException("Artifact File is null ");
 		}
-		getLog().info("Copy " + artifactFile + " to " + destinationFile);
-		destinationFile.getParentFile().mkdirs();
-		if (deleteStub && stubFile.exists()) {
-			deleteAll(stubFile);
-		}
-		if (withVersion) {
-			// This bails out in an exception if there is a problem.
-			handleDuplicates(destination, fileName);
+		if ("war".equals(project.getPackaging()) && isExplodeWars()) {
+			if (stubFile.exists()) {
+				deleteAll(stubFile);
+			}
+			stubFile.mkdirs();
+			unpack(artifactFile, stubFile, artifact.getType(), true);
+		} else {
+			if (deleteStub && stubFile.exists()) {
+				deleteAll(stubFile);
+			}
+			destinationFile.getParentFile().mkdirs();
+			if (withVersion) {
+				// This bails out in an exception if there is a problem.
+				handleDuplicates(destination, fileName);
+			}
+			getLog().info("Copy " + artifactFile + " to " + destinationFile);
+			copyFileIfModified(artifactFile, destinationFile);
 		}
 
-		copyFileIfModified(artifactFile, destinationFile);
 	}
 
 	/**
