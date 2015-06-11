@@ -66,17 +66,17 @@ public class ComponentDeployExplodedMojo extends AbstractComponentMojo {
 
 	private Properties locationMap;
 
-	private static Properties defaultLocatioMap;
+	private static Properties defaultLocationMap;
 	
 	static {
-		defaultLocatioMap = new Properties();
-		defaultLocatioMap.setProperty("components", "components/");
-		defaultLocatioMap.setProperty("webapps", "webapps/");
-		defaultLocatioMap.setProperty("shared/lib", "shared/lib/");
-		defaultLocatioMap.setProperty("server/lib", "server/lib/");
-		defaultLocatioMap.setProperty("common/lib", "common/lib/");
-		defaultLocatioMap.setProperty("endorsed", "endorsed/");
-		defaultLocatioMap.setProperty("configuration", "/");
+		defaultLocationMap = new Properties();
+		defaultLocationMap.setProperty("components", "components/");
+		defaultLocationMap.setProperty("webapps", "webapps/");
+		defaultLocationMap.setProperty("shared/lib", "lib/");
+		defaultLocationMap.setProperty("server/lib", "lib/");
+		defaultLocationMap.setProperty("common/lib", "lib/");
+		defaultLocationMap.setProperty("endorsed", "endorsed/");
+		defaultLocationMap.setProperty("configuration", "/");
 	}
 
 	public File getDeployDirectory() {
@@ -311,12 +311,12 @@ public class ComponentDeployExplodedMojo extends AbstractComponentMojo {
 				}
 			}
 			if ( locationMap == null ) {
-				locationMap = defaultLocatioMap;
+				locationMap = defaultLocationMap;
 			}
 		}
 		String deploySubDir = locationMap.getProperty(key);
 		if ( deploySubDir == null || deploySubDir.trim().length() == 0 ) {
-			deploySubDir = defaultLocatioMap.getProperty(key);
+			deploySubDir = defaultLocationMap.getProperty(key);
 		}
 		if (deploySubDir == null ) {
 		  deploySubDir = key;
