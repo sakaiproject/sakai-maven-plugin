@@ -1,5 +1,15 @@
-.classpath
+.idea
 .project
-target/
+.classpath
 .settings/
+*.iml
+*.swp
+*.orig
+*.rej
+bin/
 maven-archiver/
+target/
+sakai-demo.tar.gz
+sakai-demo.zip
+.directory
+.sass-cache
