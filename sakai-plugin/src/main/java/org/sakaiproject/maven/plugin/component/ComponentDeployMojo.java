@@ -78,6 +78,13 @@ public class ComponentDeployMojo extends AbstractComponentMojo {
 
 	private static Properties defaultLocationMap;
 	
+	/**
+	 * Skip deployment
+	 *
+	 * @parameter property="skip"
+	 */
+	private boolean skip = false;
+
 	static {
 		defaultLocationMap = new Properties();
 		defaultLocationMap.setProperty("components", "components/");
@@ -125,8 +132,23 @@ public class ComponentDeployMojo extends AbstractComponentMojo {
 		this.cleanup = cleanup;
 	}
 
+	public boolean isSkip() {
+		return skip;
+	}
+
+	public void setSkip(boolean skip) {
+		this.skip = skip;
+	}
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		deployToContainer();
+		if ( skip ) {
+			getLog().info( "Skipping artifact deployment " +
+					project.getGroupId() + ":" +
+					project.getArtifactId() + ":" +
+					project.getPackaging());
+		} else {
+			deployToContainer();
+		}
 	}
 
 	public void deployToContainer() throws MojoExecutionException,
