@@ -55,6 +55,8 @@
                     <useReleaseProfile>false</useReleaseProfile>
                     <!-- This is so that we don't have to specify the release profile when releasing -->
                     <releaseProfiles>release</releaseProfiles>
+                    <!-- We don't need to include the project name in the tag -->
+                    <tagNameFormat>@{project.version}</tagNameFormat>
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
