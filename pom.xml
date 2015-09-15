@@ -5,6 +5,25 @@
     <artifactId>plugins</artifactId>
     <version>1.4.2-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <description>This is a maven plugin that deploys Sakai artifacts into a copy of Tomcat.</description>
+    <url>https://github.com/sakaiproject/sakai-maven-plugin</url>
+    <licenses>
+        <license>
+            <name>Educational Community License, Version 2.0</name>
+            <url>http://www.opensource.org/licenses/ecl2.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>sakai-core-team</id>
+            <name>Sakai Core Team</name>
+            <email>sakai-core-team@sakaiproject.org</email>
+            <url>http://sakaiproject.org</url>
+            <organization>Apereo</organization>
+            <organizationUrl>http://apereo.org</organizationUrl>
+        </developer>
+    </developers>
 
     <modules>
         <module>sakai-plugin</module>
