@@ -3,7 +3,7 @@
     <name>Sakai Maven Plugin</name>
     <groupId>org.sakaiproject.maven</groupId>
     <artifactId>plugins</artifactId>
-    <version>1.4.2-SNAPSHOT</version>
+    <version>1.4.2</version>
     <packaging>pom</packaging>
     <description>This is a maven plugin that deploys Sakai artifacts into a copy of Tomcat.</description>
     <url>https://github.com/sakaiproject/sakai-maven-plugin</url>
@@ -37,7 +37,8 @@
         <url>https://github.com/sakaiproject/sakai-maven-plugin</url>
         <connection>scm:git:git://github.com/sakaiproject/sakai-maven-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:sakaiproject/sakai-maven-plugin.git</developerConnection>
-    </scm>
+      <tag>1.4.2</tag>
+  </scm>
 
     <pluginRepositories>
         <pluginRepository>
