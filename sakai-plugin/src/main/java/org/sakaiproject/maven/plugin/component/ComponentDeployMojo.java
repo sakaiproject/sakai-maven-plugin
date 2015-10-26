@@ -455,8 +455,6 @@ for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
 			fileName = getDeployId() + "-" + project.getVersion()
 					+ "." + project.getPackaging();
 			stubName = getDeployId() + "-" + project.getVersion();
-			// This bails out in an exception if there is a problem.
-			handleDuplicates(destination, fileName);
 		} else {
 			fileName = getDeployId() + "." + project.getPackaging();
 			stubName = getDeployId();
@@ -495,7 +493,11 @@ for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
 		if (deleteStub && stubFile.exists()) {
 			deleteAll(stubFile);
 		}
-		
+		if (withVersion) {
+			// This bails out in an exception if there is a problem.
+			handleDuplicates(destination, fileName);
+		}
+
 		copyFileIfModified(artifactFile, destinationFile);
 	}
 
