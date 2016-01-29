@@ -77,6 +77,7 @@ public class ComponentMojoTest
         File xmlSource = createXMLConfigDir( testId, new String[]{"web.xml"} );
 
         project.setArtifact( warArtifact );
+        project.setParent(null);
         this.configureMojo( mojo, new LinkedList(), classesDir, webAppSource, webAppDirectory, null, project );
         setVariableValueToObject( mojo, "outputDirectory", outputDir );
         setVariableValueToObject( mojo, "warName", warName );

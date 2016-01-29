@@ -7,74 +7,64 @@ import java.io.File;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 
 /**
  * Package Configuration as a Zip for later deployment.
- *
- * @goal configuration
- * @phase package
- * @requiresDependencyResolution runtime
- * @threadSafe
  */
+@Mojo(name="configuration", defaultPhase = LifecyclePhase.PACKAGE, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
 public class ConfigurationMojo
     extends AbstractMojo
 {
 	/**
 	 * The maven project.
-	 * 
-	 * @parameter expression="${project}"
-	 * @required
-	 * @readonly
 	 */
+    @Parameter(defaultValue="${project}", required = true, readonly = true)
 	protected MavenProject project;
 
     /**
      * The Zip archiver.
-     * @component role="org.codehaus.plexus.archiver.Archiver" role-hint="zip"
      */
+    @Component(role = org.codehaus.plexus.archiver.Archiver.class, hint = "zip")
     private ZipArchiver zipArchiver;
 
     /**
      * Directory containing the build files.
-     * @parameter expression="${project.build.directory}/configuration"
      */
+    @Parameter(defaultValue="${project.build.directory}/configuration")
     private String configurationDirectory;
     /**
      * Directory containing the build files.
-     * @parameter expression="${project.build.directory}"
      */
+    @Parameter(defaultValue="${project.build.directory}")
     private String outputDirectory;
 
     /**
      * The name of the generated Configuration.
-     *
-     * @parameter expression="${project.build.finalName}"
-     * @required
      */
+    @Parameter(defaultValue="${project.build.finalName}", required = true)
 	private String configurationName;
 	
     /**
-     * @component
      */
+    @Component
     private MavenProjectHelper projectHelper;
 
     /**
      * Whether this is the main artifact being built. Set to <code>false</code> if you don't want to install or
      * deploy it to the local repository instead of the default one in an execution.
-     *
-     * @parameter expression="${primaryArtifact}" default-value="true"
      */
+    @Parameter(property="primaryArtifact", defaultValue = "true")
     private boolean primaryArtifact;
 
     
     /**
      * Classifier to add to the artifact generated. If given, the artifact will be an attachment instead.
-     *
-     * @parameter
      */
+    @Parameter
 	private String classifier;
 
     protected static File getConfigurationFile( File basedir, String finalName, String classifier )
