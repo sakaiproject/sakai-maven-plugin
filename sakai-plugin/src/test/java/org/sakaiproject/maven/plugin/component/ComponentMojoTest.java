@@ -109,9 +109,9 @@ public class ComponentMojoTest
         assertTrue( "web source not found: org/web/app/last-exile.jsp",
                     jarContent.containsKey( "org/web/app/last-exile.jsp" ) );
         assertTrue( "pom file not found",
-                    jarContent.containsKey( "META-INF/maven/org.apache.maven.test/maven-test-plugin/pom.xml" ) );
+                    jarContent.containsKey( "META-INF/maven/org.apache.maven.plugin.test/maven-war-plugin-test/pom.xml" ) );
         assertTrue( "pom properties not found",
-                    jarContent.containsKey( "META-INF/maven/org.apache.maven.test/maven-test-plugin/pom.properties" ) );
+                    jarContent.containsKey( "META-INF/maven/org.apache.maven.plugin.test/maven-war-plugin-test/pom.properties" ) );
     }
 
     public void testClassifier()
@@ -161,9 +161,9 @@ public class ComponentMojoTest
         assertTrue( "web source not found: org/web/app/last-exile.jsp",
                     jarContent.contains( "org/web/app/last-exile.jsp" ) );
         assertTrue( "pom file not found",
-                    jarContent.contains( "META-INF/maven/org.apache.maven.test/maven-test-plugin/pom.xml" ) );
+                    jarContent.contains( "META-INF/maven/org.apache.maven.plugin.test/maven-war-plugin-test/pom.xml" ) );
         assertTrue( "pom properties not found",
-                    jarContent.contains( "META-INF/maven/org.apache.maven.test/maven-test-plugin/pom.properties" ) );
+                    jarContent.contains( "META-INF/maven/org.apache.maven.plugin.test/maven-war-plugin-test/pom.properties" ) );
     }
 
     public void testPrimaryArtifact()
@@ -214,9 +214,9 @@ public class ComponentMojoTest
         assertTrue( "web source not found: org/web/app/last-exile.jsp",
                     jarContent.contains( "org/web/app/last-exile.jsp" ) );
         assertTrue( "pom file not found",
-                    jarContent.contains( "META-INF/maven/org.apache.maven.test/maven-test-plugin/pom.xml" ) );
+                    jarContent.contains( "META-INF/maven/org.apache.maven.plugin.test/maven-war-plugin-test/pom.xml" ) );
         assertTrue( "pom properties not found",
-                    jarContent.contains( "META-INF/maven/org.apache.maven.test/maven-test-plugin/pom.properties" ) );
+                    jarContent.contains( "META-INF/maven/org.apache.maven.plugin.test/maven-war-plugin-test/pom.properties" ) );
     }
 
     public void testNotPrimaryArtifact()
@@ -270,8 +270,8 @@ public class ComponentMojoTest
         assertTrue( "web source not found: org/web/app/last-exile.jsp",
                     jarContent.contains( "org/web/app/last-exile.jsp" ) );
         assertTrue( "pom file not found",
-                    jarContent.contains( "META-INF/maven/org.apache.maven.test/maven-test-plugin/pom.xml" ) );
+                    jarContent.contains( "META-INF/maven/org.apache.maven.plugin.test/maven-war-plugin-test/pom.xml" ) );
         assertTrue( "pom properties not found",
-                    jarContent.contains( "META-INF/maven/org.apache.maven.test/maven-test-plugin/pom.properties" ) );
+                    jarContent.contains( "META-INF/maven/org.apache.maven.plugin.test/maven-war-plugin-test/pom.properties" ) );
     }
 }
