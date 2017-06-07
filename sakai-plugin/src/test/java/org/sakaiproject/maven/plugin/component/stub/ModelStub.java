@@ -54,7 +54,7 @@ public class ModelStub
 
     public String getGroupId()
     {
-        return "org.apache.maven.test";
+        return "org.apache.maven.plugin.test";
     }
 
     public String getPackaging()

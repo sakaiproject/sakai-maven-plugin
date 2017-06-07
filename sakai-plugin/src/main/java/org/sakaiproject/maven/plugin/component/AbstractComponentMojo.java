@@ -456,7 +456,7 @@ public abstract class AbstractComponentMojo extends AbstractMojo {
 			archiver.getArchiver().addDirectory(classesDirectory,
 					getIncludes(), getExcludes());
 
-			archiver.createArchive(project, archive);
+			archiver.createArchive(null, project, archive);
 		} catch (Exception e) {
 			// TODO: improve error handling
 			throw new MojoExecutionException("Error assembling JAR", e);
