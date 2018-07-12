@@ -382,6 +382,11 @@ public class ComponentDeployMojo extends AbstractComponentMojo {
 				throw new MojoFailureException(
 						"Null Artifact found, sould never happen, in artifacts for project ");
 			}
+			
+			if ("test".equals(artifact.getScope())) {
+				getLog().info("Artifact file has test scope for dependency " + artifact.getId() + " skipping");
+				continue;
+			}
 			File artifactFile = artifact.getFile();
 			if (artifactFile == null) {
 				artifactResolver.resolve(artifact, remoteRepositories,
@@ -396,10 +401,8 @@ public class ComponentDeployMojo extends AbstractComponentMojo {
 						"Artifact File is null for dependency "
 								+ artifact.getId() + " in " + getProjectId());
 			}
-                        getLog().debug("Processing: " + artifact.getId());
-                        if ( !"test".equals(artifact.getScope()) ) {
-                          unpack(artifact.getFile(), destination, artifact.getType(),true);
-                        }
+			getLog().debug("Processing: " + artifact.getId());
+			unpack(artifact.getFile(), destination, artifact.getType(),true);
 		}
 
 	}
@@ -414,6 +417,10 @@ for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
                                                 + getProjectId());
                 throw new MojoFailureException(
                                 "Null Artifact found, sould never happen, in artifacts for project ");
+        }
+        if ("test".equals(artifact.getScope())) {
+            getLog().info("Artifact file has test scope for dependency " + artifact.getId() + " skipping");
+            continue;
         }
         File artifactFile = artifact.getFile();
         if (artifactFile == null) {
