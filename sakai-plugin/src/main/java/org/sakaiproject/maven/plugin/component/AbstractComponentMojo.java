@@ -315,12 +315,16 @@ public abstract class AbstractComponentMojo extends AbstractMojo {
         public void deleteAll(File dir) {
               if ( dir.isDirectory() ) {
                  File[] files = dir.listFiles();
-                 for ( int i = 0;i < files.length; i++ ) {
-		      if ( files[i].isDirectory() ) {
-                         deleteAll(files[i]);
-                      } else {
-                         files[i].delete();
-                      }
+                 if (files != null) {
+                     for ( int i = 0;i < files.length; i++ ) {
+                        if ( files[i].isDirectory() ) {
+                             deleteAll(files[i]);
+                        } else {
+                            files[i].delete();
+                        }
+                     }
+                 } else {
+		            getLog().error("deleteAll: files is null");
                  }
               } 
 	      dir.delete();
