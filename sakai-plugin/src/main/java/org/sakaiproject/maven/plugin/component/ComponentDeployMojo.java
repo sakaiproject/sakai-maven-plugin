@@ -449,7 +449,7 @@ for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
         } else {
                 getLog()
                                 .info("Copy " + artifactFile + " to " + destinationFile);
-                copyFileIfModified(artifact.getFile(), destinationFile);
+                FileUtils.copyFileIfModified(artifact.getFile(), destinationFile);
         }
 }
 
@@ -514,7 +514,7 @@ for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
 				handleDuplicates(destination, fileName);
 			}
 			getLog().info("Copy " + artifactFile + " to " + destinationFile);
-			copyFileIfModified(artifactFile, destinationFile);
+			FileUtils.copyFileIfModified(artifactFile, destinationFile);
 		}
 
 	}
